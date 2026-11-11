@@ -19,8 +19,8 @@ function validatePhone(value) {
   return isValidLength && startsCorrectly;
 }
 
-function getPasswordStrength(value) {
-  if (value.length === 0) return 0;
+function validatePhone(value) {
+  return value.length === 12 && /^\+7[0-9]{10}$/.test(value);
 
   let score = 0;
   if (value.length >= 8) score++;
