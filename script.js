@@ -13,28 +13,20 @@ const strengthBar = document.getElementById('strengthBar');
 const strengthLabel = document.getElementById('strengthLabel');
 
 function validatePhone(value) {
-  const digitsOnly = value.replace(/\D/g, '');
-  const isValidLength = digitsOnly.length >= 9;
-  const startsCorrectly = digitsOnly.startsWith('7') || digitsOnly.startsWith('8');
-  return isValidLength && startsCorrectly;
+  return value.length === 12 && /^\+7[0-9]{10}$/.test(value);
 }
 
-function validatePhone(value) {
-  return value.length === 12 && /^\+7[0-9]{10}$/.test(value);
-
-  let score = 0;
-  if (value.length >= 8) score++;
-  if (/[0-9]/.test(value)) score++;
-  if (/[^a-zA-Z0-9]/.test(value)) score++;
-  if (/[A-Z]/.test(value) && /[a-z]/.test(value)) score++;
-
-  if (score <= 1) return 1;
-  if (score <= 2) return 2;
-  return 3;
+function getPasswordStrength(value) {
+  if (value.length === 0) return 0;
+  if (isPasswordValid(value)) return 3;
+  return [...value].length < 8 ? 1 : 2;
 }
 
 function isPasswordValid(value) {
-  return getPasswordStrength(value) >= 2 && value.length >= 8;
+  return [...value].length >= 8
+    && /\p{L}/u.test(value)
+    && /[0-9]/.test(value)
+    && /[\p{P}\p{S}]/u.test(value);
 }
 
 function doPasswordsMatch(password, confirm) {
@@ -82,7 +74,7 @@ passwordInput.addEventListener('input', () => {
   if (passwordInput.value.length === 0) {
     passwordError.textContent = '';
   } else if (!isPasswordValid(passwordInput.value)) {
-    passwordError.textContent = 'Пароль слишком слабый: минимум 8 символов, добавьте цифры или спецсимволы';
+    passwordError.textContent = 'Минимум 8 символов, включая хотя бы одну букву, одну цифру и один спецсимвол';
   } else {
     passwordError.textContent = '';
   }
